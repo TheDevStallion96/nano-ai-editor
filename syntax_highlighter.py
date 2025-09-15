@@ -14,6 +14,40 @@ except ImportError:
     PYGMENTS_AVAILABLE = False
 
 class SyntaxHighlighter:
+    """
+    SyntaxHighlighter: handles syntax highlighting for different file types using Pygments and curses.
+    Attributes:
+        enabled (bool): Indicates if syntax highlighting is enabled (Pygments available).
+        lexer (Lexer): The current Pygments lexer in use.
+        language (str): The name of the current language for highlighting.
+        formatter (Formatter): The Pygments formatter for terminal output.
+        token_colors (dict): Mapping of Pygments token types to curses color constants.
+    Methods:
+        __init__():
+            Initializes the SyntaxHighlighter, sets up color mappings and color pairs if curses is available.
+        init_color_pairs():
+            Initializes curses color pairs for syntax highlighting.
+        set_language_from_filename(filename):
+            Sets the syntax highlighting language based on the given filename.
+            Returns True if a lexer was found, otherwise False.
+        set_language_by_name(language_name):
+            Sets the syntax highlighting language by its name.
+            Returns True if a lexer was found, otherwise False.
+        get_line_tokens(line_text):
+            Returns a list of (token_type, text) tuples for the given line of text.
+        get_token_color_pair(token_type):
+            Returns the curses color pair number for the given token type.
+        color_to_pair(color):
+            Converts a curses color constant to its corresponding color pair number.
+        highlight_line_for_terminal(line_text):
+            Returns a list of (text, color_pair) tuples for the given line, suitable for terminal display.
+        is_available():
+            Returns True if syntax highlighting is available.
+        get_supported_languages():
+            Returns a list of supported language names.
+        get_current_language():
+            Returns the name of the currently selected language.
+    """
     """Handles syntax highlighting for different file types"""
     
     def __init__(self):
