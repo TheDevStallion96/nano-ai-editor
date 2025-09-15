@@ -3,6 +3,7 @@ Display - Manages screen rendering and UI layout
 """
 
 import curses
+import os
 
 class Display:
     """Manages the terminal display and rendering"""
@@ -13,6 +14,8 @@ class Display:
         self.scroll_offset = 0
         self.line_number_width = 4
         self.show_line_numbers = True
+        self.start_y = 0
+        self.start_x = 0
         
         # Calculate usable areas
         self.text_start_col = self.line_number_width if self.show_line_numbers else 0
@@ -100,12 +103,22 @@ class Display:
             pass
         
         # Prepare status text
+        # Get relative path from user's home directory to the current file
+        home_dir = os.path.expanduser("~")
+        if text_buffer.filename:
+            abs_path = os.path.abspath(text_buffer.filename)
+            try:
+                rel_path = os.path.relpath(abs_path, home_dir)
+            except ValueError:
+                rel_path = abs_path
+        else:
+            rel_path = "[New File]"
         filename = text_buffer.filename or "[New File]"
         modified = "*" if text_buffer.modified else ""
         position = f"Line {cursor.row + 1}, Col {cursor.col + 1}"
         
         # Create status line
-        left_status = f"{filename}{modified}"
+        left_status = f"{rel_path}{modified}"
         right_status = position
         
         # Calculate spacing
@@ -169,7 +182,7 @@ class Display:
         """Refresh the screen to show changes"""
         self.stdscr.refresh()
     
-    def render_all(self, text_buffer, cursor):
+    def render_all(self, text_buffer, cursor, selection_manager):
         """Render everything: text, line numbers, status bar, and position cursor"""
         self.scroll_if_needed(cursor)
         self.render_line_numbers(text_buffer)
