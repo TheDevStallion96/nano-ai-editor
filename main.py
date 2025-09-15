@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Terminal Text Editor - Main Entry Point
 A simple nano-like text editor built with Python curses
@@ -36,9 +35,13 @@ def init_curses():
 
 def cleanup_curses():
     """Cleanup curses before exit"""
-    curses.nocbreak()
-    curses.echo()
-    curses.endwin()
+    try:
+        curses.endwin()
+    except curses.error:
+        pass  # Ignore if curses is not initialized or already ended
+    # curses.nocbreak()
+    # curses.echo()
+    # curses.endwin()
 
 def main():
     """Main entry point"""
