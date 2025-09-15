@@ -7,6 +7,8 @@ import os
 from text_buffer import TextBuffer
 from cursor import Cursor
 from display import Display
+from selection_manager import SelectionManager
+from syntax_highlighter import SyntaxHighlighter
 
 class Editor:
     """Main editor class that coordinates the text buffer, cursor, and display"""
@@ -18,13 +20,16 @@ class Editor:
         self.display = Display(stdscr)
         self.running = True
         self.message = ""  # For status messages
+        self.selection_manager = SelectionManager()
+        self.syntax_highlighter = SyntaxHighlighter()
         
     def open_file(self, filename):
         """Open a file for editing"""
         try:
             self.text_buffer.load_file(filename)
             self.cursor.set_position(0, 0)
-            self.message = f"Opened {filename}"
+            self.syntax_highlighter.set_language_from_filename(filename)
+            self.message = f"Opened {filename} ({self.syntax_highlighter.get_current_language()})"
         except IOError as e:
             self.message = str(e)
     
