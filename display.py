@@ -151,10 +151,11 @@ class Display:
     
     def position_cursor(self, cursor):
         """Position the terminal cursor at the text cursor location"""
-        screen_row = cursor.row - self.scroll_offset
+        screen_row = self.start_y + cursor.row - self.scroll_offset
         screen_col = cursor.col + self.text_start_col
         
-        if 0 <= screen_row < self.text_height and 0 <= screen_col < self.width:
+        if (self.start_y <= screen_row < self.start_y + self.text_height and 
+            self.text_start_col <= screen_col < self.start_x + self.width):
             try:
                 self.stdscr.move(screen_row, screen_col)
             except curses.error:
